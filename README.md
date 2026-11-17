@@ -31,6 +31,14 @@ Tek yapman gereken `data/kayyumlar.json` dosyasına yeni bir olay eklemek:
 
 Ziyaretçiler GitHub'da **Issues → Yeni kayyum bildir** formunu kullanarak öneri gönderebilir.
 
+## Yayınlama (Vercel)
+
+1. [vercel.com/new](https://vercel.com/new) → GitHub ile giriş yap → `santneuv/kayyum-counter` reposunu **Import** et.
+2. Framework Preset: **Other** · Build Command: boş · Output Directory: boş (kök dizin).
+3. **Deploy**. Site `kayyum-counter.vercel.app` gibi bir adreste yayında olur.
+
+Bundan sonra `main` dalına yapılan her push (ör. `data/kayyumlar.json` güncellemesi) otomatik olarak yeniden yayınlanır.
+
 ## Yayınlama (GitHub Pages)
 
 Repo → **Settings → Pages → Build and deployment** → Source: *Deploy from a branch* → Branch: `main` / `/ (root)` → Save.
