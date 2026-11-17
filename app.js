@@ -129,39 +129,59 @@
       `<span>📈 TOPLAM: ${toplam}</span><span>⏳ SIRADAKİ: SEN OLABİLİRSİN</span>`;
     $("ticker").innerHTML = parca + parca;
 
-    // Liste
-    const ciz = (q = "") => {
-      const s = q.trim().toLocaleLowerCase("tr-TR");
+    // Sicil kaydı
+    // Sicil numaraları eskiden yeniye verilir (tarihsiz olanlar en eski sayılır)
+    const kronolojik = [...olaylar].reverse();
+    const sicilNo = new Map();
+    let no = 0;
+    kronolojik.forEach((o) => o.kurumlar.forEach((k) => sicilNo.set(o.id + "|" + k, ++no)));
+    $("sicil-ozet").textContent = `${toplam} kayıt, ${olaylar.length} dosya`;
+
+    let aktifKat = "Tümü";
+    const katlar = ["Tümü", ...katList.map(([ad]) => ad)];
+    $("filtreler").innerHTML = katlar.map((k) =>
+      `<button type="button" class="chip" data-kat="${escape(k)}" aria-pressed="${k === aktifKat}">${escape(k)}</button>`).join("");
+
+    const ciz = () => {
+      const s = $("ara").value.trim().toLocaleLowerCase("tr-TR");
       const html = olaylar.map((o) => {
+        if (aktifKat !== "Tümü" && o.kategori !== aktifKat) return "";
         const kurumlar = o.kurumlar.filter((k) => !s || k.toLocaleLowerCase("tr-TR").includes(s));
         if (!kurumlar.length) return "";
-        const etiket = o.tarih ? trTarih(o.tarih) : (o.tarihEtiketi || "Tarih belirsiz");
         const bugunMu = o.tarih === bugun;
-        const baslik = o.kaynak
-          ? `<a href="${escape(o.kaynak)}" target="_blank" rel="noopener">${escape(o.baslik)}</a>`
-          : escape(o.baslik);
+        const etiket = bugunMu ? "Bugün" : o.tarih ? trTarih(o.tarih) : (o.tarihEtiketi || "Tarih belirsiz");
+        const kaynak = o.kaynak
+          ? `<a class="file-src" href="${escape(o.kaynak)}" target="_blank" rel="noopener">Habere git ↗</a>` : "";
         return `
-          <article class="event">
-            <div class="event-meta">
-              <span class="pill ${bugunMu ? "pill-today" : ""}">${bugunMu ? "BUGÜN" : escape(etiket)}</span>
-              <span>${escape(o.kategori)}</span>
-              <span>· ${o.kurumlar.length} kurum</span>
-            </div>
-            <h3>${baslik}</h3>
-            <div class="cards">
+          <article class="file${bugunMu ? " file-today" : ""}">
+            <span class="stamp file-stamp" aria-hidden="true">KAYYUM<br>ATANDI</span>
+            <header class="file-head">
+              <div class="file-meta">
+                <span class="pill${bugunMu ? " pill-today" : ""}">${escape(etiket)}</span>
+                <span>${escape(o.kategori)}</span>
+              </div>
+              <h3>${escape(o.baslik)}</h3>
+              <div class="file-foot">
+                <span>${o.kurumlar.length} kurum</span>${kaynak}
+              </div>
+            </header>
+            <ol class="rows">
               ${kurumlar.map((k) => `
-                <div class="card">
-                  <span class="card-name">${escape(k)}</span>
-                  <span class="stamp">KAYYUM<br>ATANDI</span>
-                </div>`).join("")}
-            </div>
+                <li><span class="row-no">№ ${String(sicilNo.get(o.id + "|" + k)).padStart(3, "0")}</span><span class="row-name">${escape(k)}</span></li>`).join("")}
+            </ol>
           </article>`;
       }).join("");
-      $("olaylar").innerHTML = html || `<p class="empty">Bulunamadı. Şimdilik. ⏳</p>`;
+      $("olaylar").innerHTML = html || `<p class="empty">Kayıt bulunamadı. Şimdilik. ⏳</p>`;
     };
     ciz();
-    $("ara").addEventListener("input", (e) => ciz(e.target.value));
-
+    $("ara").addEventListener("input", ciz);
+    $("filtreler").addEventListener("click", (e) => {
+      const b = e.target.closest(".chip");
+      if (!b) return;
+      aktifKat = b.dataset.kat;
+      $("filtreler").querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", c === b));
+      ciz();
+    });
   }
 
   function tahminMotoru() {
