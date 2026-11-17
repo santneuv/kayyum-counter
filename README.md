@@ -33,13 +33,12 @@ Ziyaretçiler GitHub'da **Issues → Yeni kayyum bildir** formunu kullanarak ön
 
 ## Otomatik güncelleme
 
-`.github/workflows/guncelle.yml` 3 saatte bir GitHub sunucularında çalışır (Actions sekmesinden **Run workflow** ile elle de çalıştırılabilir):
+Güncelleme iki parçalı ve elle bir şey yapmak gerekmiyor:
 
-1. Google News'ten son 2 günün "kayyum" haberlerini çeker. Daha önce görülmüş haberler `data/gorulen-haberler.json` dosyasında tutulur; yeni haber yoksa hiçbir şey yapmaz.
-2. **`ANTHROPIC_API_KEY` secret'ı varsa:** Claude haberleri web aramasıyla doğrular, kayyum atanan kurumları çıkarır ve `data/kayyumlar.json` dosyasına ekler (`"otomatik": true` işaretiyle). Commit atılır, site kendiliğinden yeniden yayınlanır.
-3. **Anahtar yoksa:** yeni başlıkları bir GitHub issue olarak açar, sen elle eklersin.
+1. **GitHub Action** (`.github/workflows/guncelle.yml`, 6 saatte bir): Google News'ten son 2 günün "kayyum" haberlerini çeker. Daha önce görülen haberler `data/gorulen-haberler.json` dosyasında tutulur. Sitede zaten kayıtlı kurumları anmayan yeni başlıklar `data/aday-haberler.json` dosyasına yazılır.
+2. **Claude zamanlanmış görevi** (her akşam): aday haberleri okur, web aramasıyla doğrular, kayyum atanan kurumları `data/kayyumlar.json` dosyasına `"otomatik": true` işaretiyle ekler, aday listesini boşaltır ve push eder. Site kendiliğinden yeniden yayınlanır.
 
-Anahtarı eklemek için: Repo → **Settings → Secrets and variables → Actions → New repository secret** → Ad: `ANTHROPIC_API_KEY`, değer: [console.anthropic.com](https://console.anthropic.com) üzerinden aldığın API anahtarı.
+İstersen 2. adım yerine repoya `ANTHROPIC_API_KEY` secret'ı ekleyebilirsin: bu durumda GitHub Action haberleri Claude API ile kendisi ayıklayıp doğrudan ekler.
 
 Kod tarafındaki emniyet kontrolleri: her kayıtta haber linki zorunlu, sadece son 7 günün olayları, kayıtlı kurumlar tekrar eklenmez, bir çalışmada en fazla 40 kurum. Yanlış bir otomatik kayıt olursa ilgili commit'i geri al (`git revert`) ya da JSON'dan sil.
 

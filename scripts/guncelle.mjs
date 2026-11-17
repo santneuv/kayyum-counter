@@ -4,8 +4,8 @@
 // 2. Daha önce görülmemiş haber yoksa hiçbir şey yapmaz (API çağrısı da yok).
 // 3. ANTHROPIC_API_KEY varsa: Claude haberleri web aramasıyla doğrular, kayyum
 //    atanan kurumları çıkarır ve data/kayyumlar.json dosyasına ekler.
-//    Anahtar yoksa: yeni başlıkları yeni-haberler.md dosyasına yazar
-//    (workflow bunu GitHub issue olarak açar, elle eklersin).
+//    Anahtar yoksa: yeni başlıkları data/aday-haberler.json dosyasına yazar;
+//    Claude'un günlük zamanlanmış görevi bu adayları doğrulayıp siteye ekler.
 //
 // Kullanım: node guncelle.mjs [--dry-run] [--rss dosya.xml]
 // Test: TEST_YANIT=yanit.json ANTHROPIC_API_KEY=x node guncelle.mjs --dry-run --rss ornek.xml
@@ -18,7 +18,7 @@ import path from "node:path";
 const KOK = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const VERI = path.join(KOK, "data", "kayyumlar.json");
 const GORULEN = path.join(KOK, "data", "gorulen-haberler.json");
-const RAPOR = path.join(KOK, "yeni-haberler.md");
+const ADAY = path.join(KOK, "data", "aday-haberler.json");
 
 const ARGS = process.argv.slice(2);
 const DRY = ARGS.includes("--dry-run");
@@ -186,12 +186,10 @@ async function main() {
       if (!DRY) await gorulenKaydet(gorulen, haberler);
       return;
     }
-    const md = `Otomatik tarama, sitede henüz kayıtlı olmayan kurumları anan ${yeniler.length} "kayyum" haberi buldu. ` +
-      `Gerçek bir atama varsa \`data/kayyumlar.json\` dosyasına ekle, sonra bu issue'yu kapat. (Sitede zaten olan kurumlardan bahseden haberler listelenmez.)\n\n` +
-      yeniler.slice(0, 60).map((h) => `- **${h.tarih}** · ${h.baslik} — [${h.kaynak || "haber"}](${h.link})`).join("\n") +
-      (yeniler.length > 60 ? `\n\n…ve ${yeniler.length - 60} haber daha.` : "");
-    if (!DRY) await writeFile(RAPOR, md + "\n");
-    console.log(md);
+    const adaylar = await jsonOku(ADAY, { adaylar: [] });
+    adaylar.adaylar = [...adaylar.adaylar, ...yeniler].slice(-300);
+    if (!DRY) await writeFile(ADAY, JSON.stringify(adaylar, null, 2) + "\n");
+    console.log(`Aday listesine eklendi: ${yeniler.length} (toplam ${adaylar.adaylar.length})`);
   } else {
     const ham = process.env.TEST_YANIT // test için: Claude yerine hazır JSON yanıtı
       ? JSON.parse(await readFile(process.env.TEST_YANIT, "utf8")).olaylar

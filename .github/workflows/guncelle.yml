@@ -2,12 +2,11 @@ name: Kayyum verilerini güncelle
 
 on:
   schedule:
-    - cron: "17 */3 * * *" # 3 saatte bir
+    - cron: "17 0,6,12,18 * * *" # 6 saatte bir (TSİ 03:17, 09:17, 15:17, 21:17)
   workflow_dispatch: {}
 
 permissions:
   contents: write
-  issues: write
 
 concurrency:
   group: kayyum-guncelle
@@ -35,16 +34,6 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
-      - name: API anahtarı yoksa yeni haberleri issue olarak aç
-        if: hashFiles('yeni-haberler.md') != ''
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh issue create \
-            --title "Yeni kayyum haberleri ($(TZ=Europe/Istanbul date +%Y-%m-%d\ %H:%M))" \
-            --body-file yeni-haberler.md
-          rm yeni-haberler.md
-
       - name: Değişiklikleri kaydet
         run: |
           git config user.name "kayyum-bot"
@@ -55,7 +44,7 @@ jobs:
             exit 0
           fi
           if git diff --cached --quiet -- data/kayyumlar.json; then
-            msg="Görülen haber listesini güncelle"
+            msg="Aday haberleri güncelle"
           else
             msg="Yeni kayyum atamaları eklendi 🔏"
           fi
