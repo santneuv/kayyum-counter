@@ -38,13 +38,24 @@
   const escape = (s) =>
     String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-  function sayac(el, hedef, sure = 1200) {
+  // Rakamları ayrı "flip" kartlarına böler
+  function flip(el, n, basamak = 2) {
+    const s = String(n).padStart(basamak, "0");
+    el.setAttribute("aria-label", String(n));
+    if (el.children.length !== s.length) {
+      el.innerHTML = [...s].map(() => '<span class="d"></span>').join("");
+    }
+    [...s].forEach((c, i) => { el.children[i].textContent = c; });
+  }
+
+  function sayac(el, hedef, sure = 1400, basamak = 2) {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce || hedef === 0) { el.textContent = hedef; return; }
+    const yaz = (n) => (el.classList.contains("flip") ? flip(el, n, Math.max(basamak, String(hedef).length)) : (el.textContent = n));
+    if (reduce || hedef === 0) { yaz(hedef); return; }
     const t0 = performance.now();
     const adim = (t) => {
       const p = Math.min(1, (t - t0) / sure);
-      el.textContent = Math.round(hedef * (1 - Math.pow(1 - p, 3)));
+      yaz(Math.round(hedef * (1 - Math.pow(1 - p, 3))));
       if (p < 1) requestAnimationFrame(adim);
     };
     requestAnimationFrame(adim);
@@ -71,18 +82,21 @@
     const toplam = olaylar.reduce((n, o) => n + o.kurumlar.length, 0);
     const bugunSayi = olaylar.filter((o) => o.tarih === bugun).reduce((n, o) => n + o.kurumlar.length, 0);
 
-    $("bugun-tarih").textContent = trTarih(bugun);
     sayac($("toplam"), toplam);
-    sayac($("bugun"), bugunSayi);
+    if (bugunSayi > 0) {
+      $("bugun").textContent = bugunSayi;
+      $("bugun-chip").hidden = false;
+    }
 
     // Kayyumsuz geçen gün
     const tarihler = [...new Set(olaylar.map((o) => o.tarih).filter(Boolean))].sort();
     const son = tarihler[tarihler.length - 1];
     const gun = son ? Math.max(0, gunFarki(son, bugun)) : null;
-    $("gun-sayisi").textContent = gun === null ? "?" : String(gun).padStart(2, "0");
+    if (gun === null) $("gun-sayisi").textContent = "?";
+    else flip($("gun-sayisi"), gun);
     $("board-sub").textContent =
       gun === null ? "Veri bekleniyor." :
-      gun === 0 ? "Seriyi bugün de bozduk. Yarın yeniden deneyeceğiz." :
+      gun === 0 ? "Seri bugün de bozuldu. Yarın yeniden deneyeceğiz." :
       gun === 1 ? "Dün bozuldu. Umutluyuz ama gerçekçiyiz." :
       gun < 7 ? `Son kayyum: ${trTarih(son)}. Sabırsızlanıyoruz.` :
       `Son kayyum: ${trTarih(son)}. Bu kadar sessizlik hayra alamet değil.`;
@@ -91,13 +105,8 @@
     let rekor = 0;
     for (let i = 1; i < tarihler.length; i++) rekor = Math.max(rekor, gunFarki(tarihler[i - 1], tarihler[i]) - 1);
     if (son) rekor = Math.max(rekor, gun);
-    if (tarihler.length < 2 && !gun) {
-      $("rekor").textContent = "0";
-      $("rekor-label").textContent = "En uzun kayyumsuz seri (gün) — henüz kırılmadı";
-    } else {
-      $("rekor").textContent = rekor;
-      $("rekor-label").textContent = "En uzun kayyumsuz seri (gün)";
-    }
+    flip($("rekor"), rekor);
+    $("rekor-label").textContent = rekor === 0 ? "gün · rekor hâlâ bekleniyor" : "gün · kayıtlarımıza göre";
 
     // Kategoriler
     const kat = {};

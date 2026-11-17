@@ -17,31 +17,31 @@
   <div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticker"></div></div>
 
   <header class="hero">
-    <p class="eyebrow">🇹🇷 Canlı takip · <span id="bugun-tarih"></span></p>
-    <h1>KAYYUM<br><span>SAYACI</span></h1>
+    <h1>KAYYUM <span>SAYACI</span></h1>
+
+    <div class="counter" aria-live="polite">
+      <div class="flip flip-big" id="toplam" aria-label="Toplam kayyum atanan kurum">00</div>
+      <p class="counter-label">kuruma kayyum atandı</p>
+      <p class="today-chip" id="bugun-chip" hidden>Bugün <strong id="bugun">0</strong> yeni atama 🔏</p>
+    </div>
+
     <p class="tagline" id="tagline">Türkiye'nin en hızlı büyüyen sektörü: kayyumluk.</p>
   </header>
 
   <main>
-    <section class="board" aria-label="Kayyumsuz geçen gün">
-      <div class="board-head">⚠️ İŞ GÜVENLİĞİ PANOSU ⚠️</div>
-      <p class="board-label">Bu ülkede kayyumsuz geçen gün sayısı</p>
-      <div class="board-number" id="gun-sayisi">–</div>
-      <p class="board-sub" id="board-sub">Hesaplanıyor…</p>
-    </section>
-
-    <section class="stats" aria-label="İstatistikler">
-      <div class="stat stat-big">
-        <div class="stat-num" id="toplam">0</div>
-        <div class="stat-label">Toplam kayyum atanan kurum</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num" id="bugun">0</div>
-        <div class="stat-label">Bugün atanan</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num" id="rekor">–</div>
-        <div class="stat-label" id="rekor-label">En uzun kayyumsuz seri</div>
+    <section class="panel" aria-label="Kayyumsuz geçen gün">
+      <div class="panel-stripe" aria-hidden="true"></div>
+      <div class="panel-body">
+        <div class="panel-main">
+          <p class="panel-label">Kayyumsuz geçen gün</p>
+          <div class="flip" id="gun-sayisi">00</div>
+          <p class="panel-sub" id="board-sub">Hesaplanıyor…</p>
+        </div>
+        <div class="panel-side">
+          <p class="panel-label">Rekor seri</p>
+          <div class="flip flip-small" id="rekor">00</div>
+          <p class="panel-sub" id="rekor-label">gün</p>
+        </div>
       </div>
     </section>
 
