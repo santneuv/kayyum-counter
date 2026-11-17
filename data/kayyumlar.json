@@ -1,0 +1,45 @@
+{
+  "guncelleme": "2026-11-17",
+  "olaylar": [
+    {
+      "id": "2026-11-17-fon-sorusturmasi-1",
+      "tarih": "2026-11-17",
+      "baslik": "Fon soruşturması kapsamında 5 şirkete kayyum atandı",
+      "kategori": "Holding & Finans",
+      "kaynak": null,
+      "kurumlar": [
+        "Altınbaş Holding",
+        "Altınbaş Kuyumculuk",
+        "Alnus Yatırım Menkul Değerler",
+        "Altınhas Holding",
+        "Altınhas Yatırım Holding"
+      ]
+    },
+    {
+      "id": "2026-11-17-fon-sorusturmasi-2",
+      "tarih": "2026-11-17",
+      "baslik": "Fon soruşturmasında 4 şirkete daha kayyum atandı",
+      "kategori": "Banka & Finans",
+      "kaynak": null,
+      "kurumlar": [
+        "Adil Katılım Bankası A.Ş.",
+        "Adil Varlık Yönetim A.Ş.",
+        "Adil Tasarruf Finansman A.Ş.",
+        "Dünya Varlık Yönetim A.Ş."
+      ]
+    },
+    {
+      "id": "son-bir-yil-tv-kanallari",
+      "tarih": null,
+      "tarihEtiketi": "Son bir yıl içinde",
+      "baslik": "Son bir yılda üç muhalif TV kanalına kayyum atandı",
+      "kategori": "Medya",
+      "kaynak": null,
+      "kurumlar": [
+        "TELE1",
+        "Halk TV",
+        "SZC"
+      ]
+    }
+  ]
+}

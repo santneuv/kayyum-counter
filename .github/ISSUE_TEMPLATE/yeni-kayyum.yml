@@ -1,0 +1,37 @@
+name: 🔏 Yeni kayyum bildir
+description: Kaçırdığımız bir kayyum ataması mı var? Buradan bildir.
+title: "[Kayyum] "
+labels: ["yeni-kayyum"]
+body:
+  - type: input
+    id: tarih
+    attributes:
+      label: Tarih
+      description: Atamanın yapıldığı gün (YYYY-AA-GG)
+      placeholder: "2026-11-17"
+    validations:
+      required: true
+  - type: textarea
+    id: kurumlar
+    attributes:
+      label: Kayyum atanan kurumlar
+      description: Her satıra bir kurum
+    validations:
+      required: true
+  - type: input
+    id: kaynak
+    attributes:
+      label: Haber linki
+      description: Güvenilir bir haber kaynağı (Telegram değil, haber sitesi linki tercih edilir)
+    validations:
+      required: true
+  - type: dropdown
+    id: kategori
+    attributes:
+      label: Kategori
+      options:
+        - Holding & Finans
+        - Banka & Finans
+        - Medya
+        - Belediye
+        - Diğer
