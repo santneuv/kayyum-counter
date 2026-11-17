@@ -1,0 +1,11 @@
+{
+  "name": "kayyum-guncelleyici",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "guncelle": "node guncelle.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.9.0"
+  }
+}

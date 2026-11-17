@@ -1,0 +1,63 @@
+name: Kayyum verilerini güncelle
+
+on:
+  schedule:
+    - cron: "17 */3 * * *" # 3 saatte bir
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: kayyum-guncelle
+  cancel-in-progress: false
+
+jobs:
+  guncelle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: scripts/package-lock.json
+
+      - name: Bağımlılıkları kur
+        run: npm ci --no-audit --no-fund
+        working-directory: scripts
+
+      - name: Haberleri tara
+        run: node scripts/guncelle.mjs
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: API anahtarı yoksa yeni haberleri issue olarak aç
+        if: hashFiles('yeni-haberler.md') != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --title "Yeni kayyum haberleri ($(TZ=Europe/Istanbul date +%Y-%m-%d\ %H:%M))" \
+            --body-file yeni-haberler.md
+          rm yeni-haberler.md
+
+      - name: Değişiklikleri kaydet
+        run: |
+          git config user.name "kayyum-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo "Değişiklik yok."
+            exit 0
+          fi
+          if git diff --cached --quiet -- data/kayyumlar.json; then
+            msg="Görülen haber listesini güncelle"
+          else
+            msg="Yeni kayyum atamaları eklendi 🔏"
+          fi
+          git commit -m "$msg"
+          git push

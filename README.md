@@ -31,6 +31,24 @@ Tek yapman gereken `data/kayyumlar.json` dosyasına yeni bir olay eklemek:
 
 Ziyaretçiler GitHub'da **Issues → Yeni kayyum bildir** formunu kullanarak öneri gönderebilir.
 
+## Otomatik güncelleme
+
+`.github/workflows/guncelle.yml` 3 saatte bir GitHub sunucularında çalışır (Actions sekmesinden **Run workflow** ile elle de çalıştırılabilir):
+
+1. Google News'ten son 2 günün "kayyum" haberlerini çeker. Daha önce görülmüş haberler `data/gorulen-haberler.json` dosyasında tutulur; yeni haber yoksa hiçbir şey yapmaz.
+2. **`ANTHROPIC_API_KEY` secret'ı varsa:** Claude haberleri web aramasıyla doğrular, kayyum atanan kurumları çıkarır ve `data/kayyumlar.json` dosyasına ekler (`"otomatik": true` işaretiyle). Commit atılır, site kendiliğinden yeniden yayınlanır.
+3. **Anahtar yoksa:** yeni başlıkları bir GitHub issue olarak açar, sen elle eklersin.
+
+Anahtarı eklemek için: Repo → **Settings → Secrets and variables → Actions → New repository secret** → Ad: `ANTHROPIC_API_KEY`, değer: [console.anthropic.com](https://console.anthropic.com) üzerinden aldığın API anahtarı.
+
+Kod tarafındaki emniyet kontrolleri: her kayıtta haber linki zorunlu, sadece son 7 günün olayları, kayıtlı kurumlar tekrar eklenmez, bir çalışmada en fazla 40 kurum. Yanlış bir otomatik kayıt olursa ilgili commit'i geri al (`git revert`) ya da JSON'dan sil.
+
+Yerelde deneme (dosyaya yazmaz):
+
+```bash
+cd scripts && npm ci && node guncelle.mjs --dry-run
+```
+
 ## Yayınlama (Vercel)
 
 1. [vercel.com/new](https://vercel.com/new) → GitHub ile giriş yap → `santneuv/kayyum-counter` reposunu **Import** et.
