@@ -170,7 +170,8 @@ async function main() {
   const gorulenSet = new Set(gorulen.linkler);
 
   const haberler = (await haberleriGetir())
-    .filter((h) => h.link && /kayyum/i.test(h.baslik) && !gorulenSet.has(h.link));
+    .filter((h) => h.link && /kayyum/i.test(h.baslik) && !gorulenSet.has(h.link))
+    .sort((a, b) => b.tarih.localeCompare(a.tarih));
   console.log(`Yeni haber: ${haberler.length}`);
   if (!haberler.length) return;
 
@@ -178,13 +179,14 @@ async function main() {
 
   if (!process.env.ANTHROPIC_API_KEY) {
     const md = `Otomatik tarama ${haberler.length} yeni "kayyum" haberi buldu. Kayyum ataması olanları \`data/kayyumlar.json\` dosyasına ekle.\n\n` +
-      haberler.map((h) => `- [ ] **${h.tarih}** · ${h.baslik} (${h.kaynak}) — ${h.link}`).join("\n");
+      haberler.slice(0, 60).map((h) => `- [ ] **${h.tarih}** · ${h.baslik} — [${h.kaynak || "haber"}](${h.link})`).join("\n") +
+      (haberler.length > 60 ? `\n\n…ve ${haberler.length - 60} haber daha.` : "");
     if (!DRY) await writeFile(RAPOR, md + "\n");
     console.log(md);
   } else {
     const ham = process.env.TEST_YANIT // test için: Claude yerine hazır JSON yanıtı
       ? JSON.parse(await readFile(process.env.TEST_YANIT, "utf8")).olaylar
-      : await claudeIleAyikla(haberler, mevcutKurumlar);
+      : await claudeIleAyikla(haberler.slice(0, 120), mevcutKurumlar);
     const yeni = dogrula(ham, mevcutKurumlar);
     console.log(`Eklenecek olay: ${yeni.length}`);
     for (const o of yeni) console.log(`  + ${o.tarih} ${o.baslik}: ${o.kurumlar.join(", ")}`);

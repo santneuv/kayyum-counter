@@ -29,16 +29,25 @@
       ]
     },
     {
+      "id": "2026-11-17-sozcu-tv",
+      "tarih": "2026-11-17",
+      "baslik": "Sözcü TV ve haber sitesine kayyum atandı",
+      "kategori": "Medya",
+      "kaynak": null,
+      "kurumlar": [
+        "Sözcü TV"
+      ]
+    },
+    {
       "id": "son-bir-yil-tv-kanallari",
       "tarih": null,
       "tarihEtiketi": "Son bir yıl içinde",
-      "baslik": "Son bir yılda üç muhalif TV kanalına kayyum atandı",
+      "baslik": "Son bir yılda iki muhalif TV kanalına kayyum atandı",
       "kategori": "Medya",
       "kaynak": null,
       "kurumlar": [
         "TELE1",
-        "Halk TV",
-        "SZC"
+        "Halk TV"
       ]
     }
   ]
