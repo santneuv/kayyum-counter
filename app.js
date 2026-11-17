@@ -50,14 +50,6 @@
     requestAnimationFrame(adim);
   }
 
-  function toast(msg) {
-    const t = $("toast");
-    t.textContent = msg;
-    t.classList.add("show");
-    clearTimeout(toast._t);
-    toast._t = setTimeout(() => t.classList.remove("show"), 2200);
-  }
-
   function slogan() {
     let i = 0;
     setInterval(() => {
@@ -161,17 +153,6 @@
     ciz();
     $("ara").addEventListener("input", (e) => ciz(e.target.value));
 
-    // Paylaş
-    const url = location.href.split("#")[0];
-    const metin = gun === 0
-      ? `Bugün ${bugunSayi} kuruma kayyum atandı, toplam ${toplam}. Kayyumsuz geçen gün sayısı: 0 🔏`
-      : `Toplam ${toplam} kuruma kayyum atandı. Kayyumsuz geçen gün: ${gun}. Bekliyoruz 🔏`;
-    $("paylas-x").href = `https://x.com/intent/tweet?text=${encodeURIComponent(metin)}&url=${encodeURIComponent(url)}`;
-    $("paylas-wa").href = `https://wa.me/?text=${encodeURIComponent(metin + " " + url)}`;
-    $("paylas-kopya").addEventListener("click", async () => {
-      try { await navigator.clipboard.writeText(url); toast("Link kopyalandı. Kayyum atanmadan paylaş!"); }
-      catch { toast(url); }
-    });
   }
 
   function tahminMotoru() {
