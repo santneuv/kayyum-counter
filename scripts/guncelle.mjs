@@ -178,9 +178,18 @@ async function main() {
   const mevcutKurumlar = veri.olaylar.flatMap((o) => o.kurumlar);
 
   if (!process.env.ANTHROPIC_API_KEY) {
-    const md = `Otomatik tarama ${haberler.length} yeni "kayyum" haberi buldu. Kayyum ataması olanları \`data/kayyumlar.json\` dosyasına ekle.\n\n` +
-      haberler.slice(0, 60).map((h) => `- [ ] **${h.tarih}** · ${h.baslik} — [${h.kaynak || "haber"}](${h.link})`).join("\n") +
-      (haberler.length > 60 ? `\n\n…ve ${haberler.length - 60} haber daha.` : "");
+    // Zaten kayıtlı kurumları anan başlıkları (aynı olayın tekrarları) gösterme
+    const bilinen = mevcutKurumlar.map(normal).filter((k) => k.length > 3);
+    const yeniler = haberler.filter((h) => !bilinen.some((k) => normal(h.baslik).includes(k)));
+    console.log(`Kayıtlı kurumları anmayan haber: ${yeniler.length}`);
+    if (!yeniler.length) {
+      if (!DRY) await gorulenKaydet(gorulen, haberler);
+      return;
+    }
+    const md = `Otomatik tarama, sitede henüz kayıtlı olmayan kurumları anan ${yeniler.length} "kayyum" haberi buldu. ` +
+      `Gerçek bir atama varsa \`data/kayyumlar.json\` dosyasına ekle, sonra bu issue'yu kapat. (Sitede zaten olan kurumlardan bahseden haberler listelenmez.)\n\n` +
+      yeniler.slice(0, 60).map((h) => `- **${h.tarih}** · ${h.baslik} — [${h.kaynak || "haber"}](${h.link})`).join("\n") +
+      (yeniler.length > 60 ? `\n\n…ve ${yeniler.length - 60} haber daha.` : "");
     if (!DRY) await writeFile(RAPOR, md + "\n");
     console.log(md);
   } else {
@@ -197,10 +206,12 @@ async function main() {
     }
   }
 
-  if (!DRY) {
-    gorulen.linkler = [...gorulen.linkler, ...haberler.map((h) => h.link)].slice(-1000);
-    await writeFile(GORULEN, JSON.stringify(gorulen, null, 2) + "\n");
-  }
+  if (!DRY) await gorulenKaydet(gorulen, haberler);
+}
+
+async function gorulenKaydet(gorulen, haberler) {
+  gorulen.linkler = [...gorulen.linkler, ...haberler.map((h) => h.link)].slice(-1000);
+  await writeFile(GORULEN, JSON.stringify(gorulen, null, 2) + "\n");
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });
