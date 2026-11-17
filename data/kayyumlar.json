@@ -2,11 +2,37 @@
   "guncelleme": "2026-11-17",
   "olaylar": [
     {
+      "id": "2026-11-17-fon-sorusturmasi-21-sirket",
+      "tarih": "2026-11-17",
+      "baslik": "Fon soruşturmasında 21 şirkete kayyum atandı",
+      "kategori": "Holding & Finans",
+      "kaynak": "https://bloomberght.com/fon-sorusturmasinda-21-sirkete-kayyum-atandi-3794808",
+      "kurumlar": [
+        "Online Teknoloji ve Danışmanlık A.Ş.",
+        "Online Yönetim Yazılım Bilişim Sistemleri A.Ş.",
+        "Reel Finansal Teknoloji Yazılımları Ali Emre Ballı Mustafa Yazıcı Kolektif Şirketi",
+        "Online Telekom Telekomünikasyon Hizmetleri Ticaret Ltd. Şti.",
+        "İntime İnfo Yazılım Çözümleri A.Ş.",
+        "Fair Finansman A.Ş.",
+        "Online Filo Araç Kiralama A.Ş.",
+        "Mülksa Gayrimenkul Danışmanlık Hizmetleri A.Ş.",
+        "Divissa Teknoloji A.Ş.",
+        "Fair Finansal Kiralama A.Ş.",
+        "Online Finansal Danışmanlık A.Ş.",
+        "Sentez Araç Kiralama Sanayi ve Ticaret A.Ş.",
+        "Cemre İletişim Sistemleri Telekomünikasyon Sanayi ve Dış Ticaret Ltd. Şti.",
+        "Tekpa Teknolojik Ürünler Pazarlama ve Dış Ticaret Ltd. Şti.",
+        "Online Gayrimenkul Geliştirme ve Ticaret A.Ş."
+      ],
+      "not": "Tasfiye halindeki 6 şirketin adları açıklanmadı.",
+      "otomatik": true
+    },
+    {
       "id": "2026-11-17-fon-sorusturmasi-1",
       "tarih": "2026-11-17",
       "baslik": "Fon soruşturması kapsamında 5 şirkete kayyum atandı",
       "kategori": "Holding & Finans",
-      "kaynak": null,
+      "kaynak": "https://www.ilkhaber-gazetesi.com/polis-asayis/altinbas-holding-e-kayyum-atandi-471305",
       "kurumlar": [
         "Altınbaş Holding",
         "Altınbaş Kuyumculuk",
@@ -33,7 +59,7 @@
       "tarih": "2026-11-17",
       "baslik": "Sözcü TV ve haber sitesine kayyum atandı",
       "kategori": "Medya",
-      "kaynak": null,
+      "kaynak": "https://tr.euronews.com/2026/11/17/sozcuye-kayyum-atandi-suclamalarla-ilgili-neler-biliniyor",
       "kurumlar": [
         "Sözcü TV"
       ]
