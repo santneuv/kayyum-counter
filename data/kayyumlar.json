@@ -1,6 +1,17 @@
 {
-  "guncelleme": "2026-11-19",
+  "guncelleme": "2026-11-20",
   "olaylar": [
+    {
+      "id": "2026-11-19-destek-holding",
+      "tarih": "2026-11-19",
+      "baslik": "Fon soruşturmasında Destek Holding'e kayyum atandı",
+      "kategori": "Holding & Finans",
+      "kaynak": "https://www.nefes.com.tr/destek-holdinge-kayyum-atandi-fon-sorusturmasinda-yeni-gelisme-165805",
+      "kurumlar": [
+        "Destek Holding A.Ş."
+      ],
+      "otomatik": true
+    },
     {
       "id": "2026-11-17-fon-sorusturmasi-21-sirket",
       "tarih": "2026-11-17",
